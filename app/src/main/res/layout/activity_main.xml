@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/lp_demo_bg">
+
+    <ImageView
+        android:layout_width="260dp"
+        android:layout_height="56dp"
+        android:layout_above="@+id/activity_main_login_container"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="32dp"
+        android:src="@drawable/lp_demo_online_class" />
+
+    <LinearLayout
+        android:id="@+id/activity_main_login_container"
+        android:layout_width="280dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/lp_demo_login_bg"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="31dp"
+                android:layout_height="31dp"
+                android:layout_marginLeft="@dimen/horizontal_middle_margin"
+                android:src="@drawable/lp_demo_code" />
+
+            <EditText
+                android:id="@+id/activity_main_invite_code"
+                android:layout_width="match_parent"
+                android:layout_height="31dp"
+                android:layout_marginLeft="@dimen/horizontal_small_margin"
+                android:background="@null"
+                android:hint="@string/lp_demo_code"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textColor="@color/lp_demo_white"
+                android:textColorHint="@color/lp_demo_white_30"
+                android:textSize="@dimen/lp_demo_text_size_default" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/horizontal_middle_margin"
+            android:layout_marginRight="@dimen/horizontal_middle_margin"
+            android:background="@color/lp_demo_white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="31dp"
+                android:layout_height="31dp"
+                android:layout_marginLeft="@dimen/horizontal_middle_margin"
+                android:src="@drawable/lp_demo_name" />
+
+            <EditText
+                android:id="@+id/activity_main_nick_name"
+                android:layout_width="match_parent"
+                android:layout_height="31dp"
+                android:layout_marginLeft="@dimen/horizontal_small_margin"
+                android:background="@null"
+                android:hint="@string/lp_demo_nickname"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textColor="@color/lp_demo_white"
+                android:textColorHint="@color/lp_demo_white_30"
+                android:textSize="@dimen/lp_demo_text_size_default" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/activity_main_login_btn"
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/activity_main_login_container"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="56dp"
+        android:background="@drawable/lp_demo_login_btn"
+        android:text="@string/lp_demo_login"
+        android:textColor="@color/lp_demo_white"
+        android:textSize="@dimen/lp_demo_text_size_large" />
+
+    <ImageView
+        android:layout_width="98dp"
+        android:layout_height="20dp"
+        android:layout_above="@+id/activity_main_login_container"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/lp_demo_cloud_logo" />
+
+</RelativeLayout>
