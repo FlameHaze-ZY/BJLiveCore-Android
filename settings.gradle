@@ -1,4 +1,1 @@
 include ':app'
-
-include ':liveplayer-sdk'
-project(':liveplayer-sdk').projectDir = new File('/Users/Shubo/Desktop/workspace/liveplayer/liveplayer-android/BJHL-LivePlayer/liveplayer-sdk')

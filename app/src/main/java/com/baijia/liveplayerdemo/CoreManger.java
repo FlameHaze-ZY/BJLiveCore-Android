@@ -20,7 +20,7 @@ public class CoreManger {
     private static CoreManger instance;
     private WebServer webServer;
 
-    private LPConstants.LPDeployType mDeployType = LPConstants.LPDeployType.Test;
+    private LPConstants.LPDeployType mDeployType = LPConstants.LPDeployType.Product;
 
     private CoreManger() {
     }

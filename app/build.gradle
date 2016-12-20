@@ -46,8 +46,10 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.2.0'
     compile 'com.facebook.fresco:fresco:0.8.1'
 
+    compile 'com.baijia.common:common-image-crop:1.1.0'
+
     compile 'com.android.support:recyclerview-v7:23.+'
 
-//    compile 'com.baijia.live:liveplayer-sdk:1.0.2@aar'
-    compile project(':liveplayer-sdk')
+    compile 'com.baijia.live:liveplayer-sdk:1.0.2'
+//    compile project(':liveplayer-sdk')
 }
