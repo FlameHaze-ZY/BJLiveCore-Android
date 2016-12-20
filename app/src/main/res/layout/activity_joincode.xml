@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/activity_invite_code"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="参加码" />
+
+    <EditText
+        android:id="@+id/activity_nick_name"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="昵称" />
+
+    <Button
+        android:id="@+id/activity_login_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="进入房间" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/activity_join_code_video"
+                android:layout_width="100dp"
+                android:layout_height="100dp"></FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/activity_join_code_remote_video"
+                android:layout_width="100dp"
+                android:layout_height="100dp"></FrameLayout>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/activity_join_code_ppt"
+            android:layout_width="200dp"
+            android:layout_height="200dp"></FrameLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/activity_login_draw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="画笔模式" />
+
+        <Button
+            android:id="@+id/activity_login_add_ppt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="添加图片" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/activity_join_code_ov"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="打开视频" />
+
+        <Button
+            android:id="@+id/activity_join_code_cv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="关闭视频" />
+
+        <Button
+            android:id="@+id/activity_join_code_oa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="打开音频" />
+
+        <Button
+            android:id="@+id/activity_join_code_ca"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="关闭音频" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/activity_login_text_area"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:scrollbars="vertical" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/activity_login_text_et"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/activity_login_text_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发送" />
+
+        <Button
+            android:id="@+id/activity_login_text_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="播放远端视频" />
+
+    </LinearLayout>
+
+</LinearLayout>

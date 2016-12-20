@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">百家云</string>
-    <string name="lp_demo_code">请输入参加码</string>
-    <string name="lp_demo_nickname">请输入昵称</string>
-    <string name="lp_demo_login">登录</string>
+    <string name="app_name">BJHL-LivePlayer</string>
+    <string name="action_settings">Settings</string>
 </resources>
