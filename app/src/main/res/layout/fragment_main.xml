@@ -1,7 +1,8 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivityFragment"
     tools:showIn="@layout/activity_main">
 
@@ -44,11 +45,39 @@
         android:text="白板"
         android:visibility="gone" />
 
+    <LinearLayout
+        android:layout_marginTop="100dp"
+        android:id="@+id/et_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/join_Code"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/shape_wide_gray_corner_white_bg"
+            android:hint="参加码" />
+
+        <EditText
+            android:layout_marginTop="10dp"
+            android:id="@+id/pw_join_code"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/shape_wide_gray_corner_white_bg"
+            android:hint="密码" />
+
+    </LinearLayout>
+
+
     <Button
-        android:id="@+id/join"
+        android:id="@+id/btnLogin"
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/whiteboard"
-        android:text="参加码登录页" />
+        android:text="登录" />
 
-</RelativeLayout>
+</LinearLayout>
