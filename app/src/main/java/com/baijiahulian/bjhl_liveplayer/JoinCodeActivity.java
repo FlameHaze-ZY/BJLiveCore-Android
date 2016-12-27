@@ -11,18 +11,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.Menu;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.baijiahulian.avsdk.liveplayer.CameraGLSurfaceView;
 import com.baijiahulian.avsdk.liveplayer.ViERenderer;
 import com.baijiahulian.livecore.LiveSDK;
+import com.baijiahulian.livecore.context.LPConstants;
 import com.baijiahulian.livecore.context.LPError;
 import com.baijiahulian.livecore.context.LiveRoom;
 import com.baijiahulian.livecore.context.OnLiveRoomListener;
@@ -38,6 +38,7 @@ import com.baijiahulian.livecore.wrapper.LPPlayer;
 import com.baijiahulian.livecore.wrapper.LPRecorder;
 import com.baijiahulian.livecore.wrapper.listener.LPPlayerListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -53,8 +54,7 @@ public class JoinCodeActivity extends AppCompatActivity {
     private Button btnSend;
     private TextView tvMessages;
     private Button openMenu;
-
-    private Menu menu = null;
+    private ScrollView scrollView;
 
     private final static String USER_NAME = "user_name";
     private final static String JOIN_CODE = "join_code";
@@ -64,15 +64,21 @@ public class JoinCodeActivity extends AppCompatActivity {
     private LPPPTFragment lppptFragment;
     private FrameLayout recorderLayout, playerLayout;
 
-    private final String[] menuItem = new String[]{"画笔模式", "添加图片"};
-    private final String[] videoItem = new String[]{"打开视频", "关闭视频", "打开音频", "关闭音频"};
-    private String[] playerItem = null;
+    private final String[] menuItemDrawOpen = new String[]{"打开画笔模式", "添加图片", "清除画笔"};
+    private final String[] menuItemDrawClose = new String[]{"关闭画笔模式", "添加图片", "清除画笔"};
+    private final String[] videoItem = new String[]{"打开视频", "打开音频", "打开美颜", "切换至高清"};
+
+    private List<String> playerVideoItem = null;
+    private String currentPlayingVideoUserId;
 
     private LPRecorder recorder; // recorder用于发布本地音视频
     private LPPlayer player; // player用于播放远程音视频流
 
-    private int videoItemNum = 0;
-    private int menuItemNum = 0;
+    private boolean menuItemState = false;
+    private boolean videoItemState = false;
+    private boolean audioItemState = false;
+    private boolean beautyFilterState = false;
+    private boolean captureVideoDefinition = false;
 
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -90,31 +96,50 @@ public class JoinCodeActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        playerVideoItem = new ArrayList<>();
         etMessage = (EditText) findViewById(R.id.activity_login_text_et);
         btnSend = (Button) findViewById(R.id.activity_login_text_send);
         tvMessages = (TextView) findViewById(R.id.activity_login_text_area);
         openMenu = (Button) findViewById(R.id.activity_join_code_menu);
+        scrollView = (ScrollView) findViewById(R.id.sl_tv);
         tvMessages.setMovementMethod(new ScrollingMovementMethod());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("菜单选项");
         LPRxUtils.clicks(openMenu)
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
                 .subscribe(new Action1<Void>() {
                     @Override
                     public void call(Void aVoid) {
-                        new AlertDialog.Builder(JoinCodeActivity.this).setTitle("菜单选项").setSingleChoiceItems(menuItem, menuItemNum, new DialogInterface.OnClickListener() {
+
+                        String[] items = null;
+                        if (menuItemState) {
+                            items = menuItemDrawClose;
+                        } else {
+                            items = menuItemDrawOpen;
+                        }
+                        builder.setItems(items, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                menuItemNum = which;
-                                // TODO Auto-generated method stub
+
                                 switch (which) {
                                     case 0:
                                         lppptFragment.changePPTCanvasMode();
+                                        if (!menuItemState) {
+                                            menuItemState = true;
+                                        } else {
+                                            menuItemState = false;
+                                        }
                                         break;
                                     case 1:
                                         lppptFragment.choosePhoto();
                                         break;
+                                    case 2:
+                                        lppptFragment.eraseAllShape();
+                                        break;
                                 }
                             }
                         }).show();
+
                     }
                 });
 
@@ -135,10 +160,13 @@ public class JoinCodeActivity extends AppCompatActivity {
 
     void refreshLogView(String msg) {
         tvMessages.append(msg);
-        int offset = tvMessages.getLineCount() * tvMessages.getLineHeight();
-        if (offset > tvMessages.getHeight()) {
-            tvMessages.scrollTo(0, offset - tvMessages.getHeight());
+        int height = tvMessages.getLineCount() * tvMessages.getLineHeight();
+        int offset = height - scrollView.getMeasuredHeight();
+        if (offset < 0) {
+            offset = 0;
         }
+        scrollView.scrollTo(0, offset);
+
     }
 
     private void enter(String code, String name) {
@@ -153,6 +181,7 @@ public class JoinCodeActivity extends AppCompatActivity {
         recorderLayout.addView(view);
         recorder = liveRoom.getRecorder();
         recorder.setPreview(view);
+        recorder.setCaptureVideoDefinition(LPConstants.LPResolutionType.LOW);
 
         playerLayout = (FrameLayout) findViewById(R.id.activity_join_code_remote_video);
         player = liveRoom.getPlayer();
@@ -160,7 +189,7 @@ public class JoinCodeActivity extends AppCompatActivity {
         //初始化ppt模块
         lppptFragment = new LPPPTFragment();
         lppptFragment.setLiveRoom(liveRoom);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.activity_join_code_ppt, lppptFragment);
         transaction.commitAllowingStateLoss();
         // 收到聊天消息
@@ -193,17 +222,13 @@ public class JoinCodeActivity extends AppCompatActivity {
         Subscriber<List<IMediaModel>> subs = new LPErrorPrintSubscriber<List<IMediaModel>>() {
             @Override
             public void call(List<IMediaModel> iMediaModels) {
+                playerVideoItem.clear();
                 if (iMediaModels != null) {
-                    int num = -1;
-                    playerItem = new String[iMediaModels.size()];
-                    for (int i = 0; i < iMediaModels.size(); i++) {
-                        if (iMediaModels.get(i).isVideoOn()) {
-                            playerItem[num++] = iMediaModels.get(i).getUser().getUserId();
+                    for (IMediaModel model : iMediaModels) {
+                        if (model.isVideoOn()) {
+                            playerVideoItem.add(model.getUser().getUserId());
                         }
                     }
-                }
-                if (iMediaModels.size() == 0) {
-                    Toast.makeText(JoinCodeActivity.this, "没有远端在线远端视频", Toast.LENGTH_LONG).show();
                 }
             }
         };
@@ -214,14 +239,27 @@ public class JoinCodeActivity extends AppCompatActivity {
                 .subscribe(new Action1<IMediaModel>() {
                     @Override
                     public void call(IMediaModel iMediaModel) {
-                        tvMessages.append("media change:" + iMediaModel.getUser().getUserId() + "\n");
+                        String userId = iMediaModel.getUser().getUserId();
+                        tvMessages.append("media change:" + userId + "\n");
+                        if (iMediaModel.isVideoOn() && !playerVideoItem.contains(userId)) {
+                            playerVideoItem.add(userId);
+                        } else if (playerVideoItem.contains(userId)) {
+                            playerVideoItem.remove(userId);
+                            if (userId.equals(currentPlayingVideoUserId)) {
+                                currentPlayingVideoUserId = null;
+                            }
+                        }
                     }
                 });
         liveRoom.getSpeakQueueVM().getObservableOfMediaNew().observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<IMediaModel>() {
                     @Override
                     public void call(IMediaModel iMediaModel) {
-                        tvMessages.append("media new:" + iMediaModel.getUser().getUserId() + "\n");
+                        String userId = iMediaModel.getUser().getUserId();
+                        tvMessages.append("media new:" + userId + "\n");
+                        if (iMediaModel.isVideoOn()) {
+                            playerVideoItem.add(userId);
+                        }
                     }
                 });
         liveRoom.getSpeakQueueVM().getObservableOfMediaClose().observeOn(AndroidSchedulers.mainThread())
@@ -229,6 +267,13 @@ public class JoinCodeActivity extends AppCompatActivity {
                     @Override
                     public void call(IMediaModel iMediaModel) {
                         tvMessages.append("media close:" + iMediaModel.getUser().getUserId() + "\n");
+                        String userId = iMediaModel.getUser().getUserId();
+                        if (playerVideoItem.contains(userId)) {
+                            playerVideoItem.remove(userId);
+                            if (userId.equals(currentPlayingVideoUserId)) {
+                                currentPlayingVideoUserId = null;
+                            }
+                        }
                     }
                 });
         // 播放音视频回调
@@ -288,48 +333,25 @@ public class JoinCodeActivity extends AppCompatActivity {
         recorderLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(JoinCodeActivity.this).setTitle("菜单").setSingleChoiceItems(videoItem, videoItemNum, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        videoItemNum = which;
-                        switch (which) {
-                            case 0:
-                                if (!recorder.isPublishing())
-                                    recorder.publish();
-                                if (!recorder.isVideoAttached())
-                                    recorder.attachVideo();
-                                break;
-                            case 1:
-                                if (recorder.isVideoAttached())
-                                    recorder.detachVideo();
-                                break;
-                            case 2:
-                                if (!recorder.isPublishing())
-                                    recorder.publish();
-                                if (!recorder.isAudioAttached())
-                                    recorder.attachAudio();
-                                break;
-                            case 3:
-                                if (recorder.isAudioAttached())
-                                    recorder.detachAudio();
-                                break;
-                        }
-                    }
-                }).show();
+                judgeVideoState();
+                showVideoDialog();
             }
         });
+
+        SurfaceView surfaceView = ViERenderer.CreateRenderer(JoinCodeActivity.this, true);
+        playerLayout.addView(surfaceView);
+        player.setVideoView(surfaceView);
+
         playerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(JoinCodeActivity.this).setTitle("播放列表").setItems(playerItem, new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(JoinCodeActivity.this).setTitle("播放列表").setItems(playerVideoItem.toArray(new String[playerVideoItem.size()]), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // TODO Auto-generated method stub
-                        // 播放远端视频 (在聊天框中输入远端用户的userId)
-                        SurfaceView surfaceView = ViERenderer.CreateRenderer(JoinCodeActivity.this, true);
-                        playerLayout.addView(surfaceView);
-                        player.setVideoView(surfaceView);
-                        player.playVideo(playerItem[which]);
+
+                        currentPlayingVideoUserId = playerVideoItem.get(which);
+                        player.playVideo(playerVideoItem.get(which));
                     }
                 }).show();
             }
@@ -355,9 +377,100 @@ public class JoinCodeActivity extends AppCompatActivity {
         });
     }
 
+    private void showVideoDialog() {
+        new AlertDialog.Builder(JoinCodeActivity.this).setTitle("菜单").setItems(videoItem, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        if (!videoItemState) {
+                            if (!recorder.isPublishing())
+                                recorder.publish();
+                            if (!recorder.isVideoAttached())
+                                recorder.attachVideo();
+                        } else {
+                            videoItemState = true;
+                            if (recorder.isVideoAttached())
+                                recorder.detachVideo();
+                        }
+                        if (!videoItemState) {
+                            videoItemState = true;
+                        } else {
+                            videoItemState = false;
+                        }
+                        break;
+                    case 1:
+                        if (!audioItemState) {
+                            if (!recorder.isPublishing())
+                                recorder.publish();
+                            if (!recorder.isAudioAttached())
+                                recorder.attachAudio();
+                        } else {
+                            if (recorder.isAudioAttached())
+                                recorder.detachAudio();
+                        }
+                        if (!audioItemState) {
+                            audioItemState = true;
+                        } else {
+                            audioItemState = false;
+                        }
+                        break;
+                    case 2:
+                        if (!beautyFilterState) {
+                            recorder.openBeautyFilter();
+                        } else {
+                            recorder.closeBeautyFilter();
+                        }
+                        if (!beautyFilterState) {
+                            beautyFilterState = true;
+                        } else {
+                            beautyFilterState = false;
+                        }
+                        break;
+                    case 3:
+                        if (!captureVideoDefinition) {
+                            recorder.setCaptureVideoDefinition(LPConstants.LPResolutionType.HIGH);
+                        } else {
+                            recorder.setCaptureVideoDefinition(LPConstants.LPResolutionType.LOW);
+                        }
+                        if (!captureVideoDefinition) {
+                            captureVideoDefinition = true;
+                        } else {
+                            captureVideoDefinition = false;
+                        }
+                        break;
+                }
+            }
+        }).show();
+    }
+
+    private void judgeVideoState() {
+        if (!videoItemState) {
+            videoItem[0] = "打开视频";
+        } else {
+            videoItem[0] = "关闭视频";
+        }
+        if (!audioItemState) {
+            videoItem[1] = "打开音频";
+        } else {
+            videoItem[1] = "关闭音频";
+        }
+        if (!beautyFilterState) {
+            videoItem[2] = "打开美颜";
+        } else {
+            videoItem[2] = "关闭美颜";
+        }
+        if (!captureVideoDefinition) {
+            videoItem[3] = "切换至高清";
+        } else {
+            videoItem[3] = "切换至普清";
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        liveRoom.quitRoom();
+        if (liveRoom != null)
+            liveRoom.quitRoom();
     }
 }
