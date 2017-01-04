@@ -9,7 +9,7 @@ liveplayer-sdk-core
 - 学生：听讲人，权限受限，不支持 设置上下课、发公告、处理他人举手、远程开关他人音视频、开关录课、开关聊天禁言；
 - 上课、下课：上课中才能举手、发言、录课；
 - 举手：学生申请发言，老师和管理员可以允许或拒绝；
-- 发言：发布音频、视频，SDK 层面发言不要求举手状态（TODO）；
+- 发言：发布音频、视频，SDK 层面发言不要求举手状态；
 - 录课：云端录制课程；
 - 聊天/弹幕：目前只支持群发；
 - 白板、课件、画笔：课件第一页是白板，后面是老师上传的课件，白板和每一页课件都支持画笔；
@@ -24,7 +24,7 @@ maven { url 'https://raw.github.com/baijia/maven/master/' }
 * 在build.gradle中添加依赖
 ```groovy
 dependencies {
-	compile 'com.baijia.live:liveplayer-sdk-core:0.0.3-snapshot'
+	compile 'com.baijia.live:liveplayer-sdk-core:0.0.4'
 }
 ```
 如果使用到了PPT、白板、涂鸦等功能可以自行实现PPTVM、ShapeVM、DocListVM中相关接口（TODO），也可以使用我们为您提供的PPTFragment，需添加如下依赖
@@ -155,8 +155,9 @@ player.setVideoView(surfaceView);
 ```java
 LPConstants.LPLinkType getLinkType();                  //获得下行链路类型
 void setLinkType(LPConstants.LPLinkType linkType);     //设置下行链路类型
+Observable<LPConstants.LPLinkType> getObservableOfLinkType(); //链路类型改变回调
 int getCurrentUdpDownLinkIndex();                      //UDP下行服务器Index
-void setCurrentUdpDownLinkIndex(int index);            
+void setCurrentUdpDownLinkIndex(int index);
 void addPlayerListener(LPPlayerListener listener);     //增加播放音视频回调
 void removePlayerListener(LPPlayerListener listener);  //移除播放音视频回调
 ```
@@ -176,6 +177,10 @@ Subscriber<List<IMediaModel>> subs = new LPErrorPrintSubscriber<List<IMediaModel
 };
 obs.subscribe(subs);
 obs.connect();
+```
+学生请求发言接口
+```java
+liveRoom.getSpeakQueueVM().requestSpeakApply();
 ```
 新的用户发言，所有用户都能收到
 ```java
@@ -198,6 +203,18 @@ liveRoom.getSpeakQueueVM().getObservableOfMediaChange().observeOn(AndroidSchedul
 关闭他人发言，仅**老师**角色可用
 ```java
 liveRoom.getSpeakQueueVM().closeOtherSpeak(userId);
+```
+关闭发言,被关闭者收到
+```java
+liveRoom.getSpeakQueueVM().getObservableOfMediaControl().observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new LPErrorPrintSubscriber<IMediaControlModel>() {
+            @Override
+            public void call(IMediaControlModel iMediaControlModel) {
+                if (!iMediaControlModel.isApplyAgreed()) {
+                    // 老师关闭发言
+                }
+            }
+        });
 ```
 发言关闭，所有用户都能收到
 ```java
@@ -342,4 +359,6 @@ public static final int CODE_ERROR_MAX_STUDENT = -0x0A;//人数上限
 public static final int CODE_ERROR_ROOMSERVER_LOSE_CONNECTION = -0x0B; // roomserver 连接断开
 public static final int CODE_ERROR_LOGIN_CONFLICT = -0x0C; // 被踢下线
 public static final int CODE_ERROR_PERMISSION_DENY = -0x0D; // 权限错误
+public static final int CODE_RECONNECT_SUCCESS = -0x0E; // 重连成功
+public static final int CODE_ERROR_STATUS_ERROR = -0x0F; // 状态错误
 ```
