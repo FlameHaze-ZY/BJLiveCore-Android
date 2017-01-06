@@ -21,7 +21,7 @@ android {
 
 dependencies {
     compile 'com.android.support:design:23.1.1'
-    compile 'com.baijia.live:liveplayer-sdk-core:0.0.4'
-    compile 'com.baijia.live:liveplayer-sdk-core-ppt:0.0.2-snapshot'
+    compile 'com.baijia.live:liveplayer-sdk-core:0.0.5'
+    compile 'com.baijia.live:liveplayer-sdk-core-ppt:0.0.5'
 
 }
