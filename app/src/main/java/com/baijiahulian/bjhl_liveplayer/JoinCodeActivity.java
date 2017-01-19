@@ -143,7 +143,8 @@ public class JoinCodeActivity extends AppCompatActivity {
                                         }
                                         break;
                                     case 1:
-                                        lppptFragment.choosePhoto();
+                                        // UI请自行实现
+//                                        liveRoom.getDocListVM().uploadImageToPPT(String filePath)
                                         break;
                                     case 2:
                                         lppptFragment.eraseAllShape();

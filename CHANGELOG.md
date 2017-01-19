@@ -1,3 +1,45 @@
+CHANGELOG 0.0.6
+==============
+## bugfix
+- 修复老师角色全体禁言、云端录制不可用的问题
+
+## API changes
+- PPT模块不再提供上传图片的UI，~~`lppptFragment.choosePhoto();`~~，可以通过调用如下API实现在手机端上传图片至PPT。
+```java
+liveRoom.getDocListVM().uploadImageToPPT(String PicFilePath).subscribe(new Action1<Boolean>() {
+    @Override
+    public void call(Boolean isSuccess) {
+    }
+});
+```
+
+## new features
+- 单个用户禁言，仅限**老师**角色
+```java
+/**
+* 禁言(teacher only)
+*
+* @param forbidUser 禁言用户
+* @param duration   禁言时长
+*/
+liveRoom.forbidChat(IUserModel forbidUser, long duration);
+```
+- 禁言回调(包含其他人被禁言)
+```java
+liveRoom.getObservableOfForbidChat().subscribe(new Action1<IForbidChatModel>() {
+    @Override
+    public void call(IForbidChatModel iForbidChatModel) {
+    }
+});
+```
+- 当前用户是否被禁言
+```java
+liveRoom.getObservableOfIsSelfChatForbid().subscribe(new Action1<Boolean>() {
+    @Override
+    public void call(Boolean isChatForbid) {
+    }
+})
+```
 
 CHANGELOG 0.0.5
 ==============

@@ -24,12 +24,12 @@ maven { url 'https://raw.github.com/baijia/maven/master/' }
 * 在build.gradle中添加依赖
 ```groovy
 dependencies {
-	compile 'com.baijia.live:liveplayer-sdk-core:0.0.4'
+	compile 'com.baijia.live:liveplayer-sdk-core:0.0.6'
 }
 ```
 如果使用到了PPT、白板、涂鸦等功能可以自行实现PPTVM、ShapeVM、DocListVM中相关接口（TODO），也可以使用我们为您提供的PPTFragment，需添加如下依赖
 ```groovy
-	compile 'com.baijia.live:liveplayer-sdk-core-ppt:0.0.2-snapshot'
+	compile 'com.baijia.live:liveplayer-sdk-core-ppt:0.0.6'
 ```
 
 ## API说明
@@ -312,6 +312,33 @@ liveRoom.requestForbidAllChat(true);                        // 开启全体禁�
 liveRoom.requestForbidAllChat(false);                       // 关闭全体禁言
 Observable<Boolean> getObservableOfForbidAllChatStatus();   // 全体禁言状态KVO
 ```
+* 单个禁言
+单个用户禁言，仅限**老师**角色
+```java
+/**
+* 禁言(teacher only)
+*
+* @param forbidUser 禁言用户
+* @param duration   禁言时长
+*/
+liveRoom.forbidChat(IUserModel forbidUser, long duration);
+```
+禁言回调(包含其他人被禁言)
+```java
+liveRoom.getObservableOfForbidChat().subscribe(new Action1<IForbidChatModel>() {
+    @Override
+    public void call(IForbidChatModel iForbidChatModel) {
+    }
+});
+```
+当前用户是否被禁言
+```java
+liveRoom.getObservableOfIsSelfChatForbid().subscribe(new Action1<Boolean>() {
+    @Override
+    public void call(Boolean isChatForbid) {
+    }
+})
+```
 * 直播间公告
 
 主动获取直播间公告
@@ -361,4 +388,6 @@ public static final int CODE_ERROR_LOGIN_CONFLICT = -0x0C; // 被踢下线
 public static final int CODE_ERROR_PERMISSION_DENY = -0x0D; // 权限错误
 public static final int CODE_RECONNECT_SUCCESS = -0x0E; // 重连成功
 public static final int CODE_ERROR_STATUS_ERROR = -0x0F; // 状态错误
+public static final int CODE_ERROR_MEDIA_SERVER_CONNECT_FAILED = -0x10; //音视频服务器连接错误
+public static final int CODE_ERROR_MEDIA_PLAY_FAILED = -0x11; //音视频播放失败
 ```
