@@ -13,7 +13,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SurfaceView;
+import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +22,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baijiahulian.avsdk.liveplayer.CameraGLSurfaceView;
+import com.baijiahulian.avsdk.liveplayer.CameraGLTextureView;
 import com.baijiahulian.avsdk.liveplayer.ViERenderer;
 import com.baijiahulian.livecore.LiveSDK;
 import com.baijiahulian.livecore.context.LPConstants;
@@ -30,6 +30,7 @@ import com.baijiahulian.livecore.context.LPError;
 import com.baijiahulian.livecore.context.LiveRoom;
 import com.baijiahulian.livecore.context.OnLiveRoomListener;
 import com.baijiahulian.livecore.launch.LPLaunchListener;
+import com.baijiahulian.livecore.listener.OnRollCallListener;
 import com.baijiahulian.livecore.models.imodels.ILoginConflictModel;
 import com.baijiahulian.livecore.models.imodels.IMediaControlModel;
 import com.baijiahulian.livecore.models.imodels.IMediaModel;
@@ -68,8 +69,8 @@ public class JoinCodeActivity extends AppCompatActivity {
     private LPPPTFragment lppptFragment;
     private FrameLayout recorderLayout, playerLayout;
 
-    private final String[] menuItemDrawOpen = new String[]{"打开画笔模式", "添加图片", "清除画笔", "课件铺满", "课件全屏"};
-    private final String[] menuItemDrawClose = new String[]{"关闭画笔模式", "添加图片", "清除画笔", "课件铺满", "课件全屏"};
+    private final String[] menuItemDrawOpen = new String[]{"打开画笔模式", "添加图片", "清除画笔", "课件铺满", "课件全屏", "切换"};
+    private final String[] menuItemDrawClose = new String[]{"关闭画笔模式", "添加图片", "清除画笔", "课件铺满", "课件全屏", "切换"};
     private final String[] videoItem = new String[]{"打开视频", "打开音频", "打开美颜", "切换至高清", "切换摄像头"};
 
     //    private List<String> playerVideoItem = null;
@@ -86,6 +87,10 @@ public class JoinCodeActivity extends AppCompatActivity {
     private boolean captureVideoDefinition = false;
 
     private boolean isSpeakingAllowed = false;
+
+    private TextureView textureView;
+
+    private AlertDialog dialog;
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -155,6 +160,27 @@ public class JoinCodeActivity extends AppCompatActivity {
                                     case 4:
                                         lppptFragment.setPPTShowWay(LPConstants.LPPPTShowWay.SHOW_FULL_SCREEN);
                                         break;
+                                    case 5:
+                                        FrameLayout flppt = (FrameLayout) findViewById(R.id.activity_join_code_ppt);
+
+                                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                        transaction.remove(lppptFragment).commitAllowingStateLoss();
+                                        getSupportFragmentManager().executePendingTransactions();
+
+
+//                                        player.playAVClose(currentPlayingVideoUserId);
+                                        playerLayout.removeAllViews();
+                                        flppt.removeAllViews();
+
+                                        FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
+                                        transaction1.add(R.id.activity_join_code_remote_video, lppptFragment).commitAllowingStateLoss();
+                                        getSupportFragmentManager().executePendingTransactions();
+
+                                        ((FrameLayout) findViewById(R.id.activity_join_code_ppt)).addView(textureView);
+
+//                                        player.playAudio(currentPlayingVideoUserId);
+//                                        player.playVideo(currentPlayingVideoUserId);
+                                        break;
                                 }
                             }
                         }).show();
@@ -205,7 +231,7 @@ public class JoinCodeActivity extends AppCompatActivity {
         this.liveRoom = mLiveRoom;
         //用于显示上行视频的surfaceview
         recorderLayout = (FrameLayout) findViewById(R.id.activity_join_code_video);
-        CameraGLSurfaceView view = new CameraGLSurfaceView(this);
+        CameraGLTextureView view = new CameraGLTextureView(this);
         recorderLayout.addView(view);
         recorder = liveRoom.getRecorder();
         recorder.setPreview(view);
@@ -451,9 +477,32 @@ public class JoinCodeActivity extends AppCompatActivity {
         if (liveRoom.getCurrentUser().getType() == LPConstants.LPUserType.Teacher)
             liveRoom.requestClassStart();
 
-        SurfaceView surfaceView = ViERenderer.CreateRenderer(JoinCodeActivity.this, true);
-        playerLayout.addView(surfaceView);
-        player.setVideoView(surfaceView);
+        // 点名
+        liveRoom.setOnRollCallListener(new OnRollCallListener() {
+
+            @Override
+            public void onRollCall(int time, final RollCall rollCallListener) {
+                dialog = new AlertDialog.Builder(JoinCodeActivity.this).setTitle("点名了")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                rollCallListener.call();
+                            }
+                        }).create();
+                dialog.show();
+            }
+
+            @Override
+            public void onRollCallTimeOut() {
+                if (dialog!=null && dialog.isShowing())
+                    dialog.dismiss();
+            }
+        });
+
+
+        textureView = ViERenderer.CreateRenderer(JoinCodeActivity.this, true);
+        playerLayout.addView(textureView);
+        player.setVideoView(textureView);
 
         playerLayout.setOnClickListener(new View.OnClickListener() {
             @Override

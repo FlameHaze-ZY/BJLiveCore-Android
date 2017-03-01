@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.baijiahulian.liveplayer"
-        minSdkVersion 10
+        minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -21,7 +21,10 @@ android {
 
 dependencies {
     compile 'com.android.support:design:23.1.1'
-    compile 'com.baijia.live:liveplayer-sdk-core:0.0.7'
-    compile 'com.baijia.live:liveplayer-sdk-core-ppt:0.0.7'
+    compile 'com.baijia.live:liveplayer-sdk-core:0.0.9'
+    compile 'com.baijia.live:liveplayer-sdk-core-ppt:0.0.9'
+
+//    compile project(path: ":liveplayer-sdk-core")
+//    compile project(path: ":liveplayer-sdk-core-ppt")
 
 }

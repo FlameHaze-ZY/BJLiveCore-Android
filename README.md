@@ -1,3 +1,4 @@
+
 liveplayer-sdk-core
 ===============
 
@@ -24,21 +25,15 @@ maven { url 'https://raw.github.com/baijia/maven/master/' }
 * 在build.gradle中添加依赖
 ```groovy
 dependencies {
-	compile 'com.baijia.live:liveplayer-sdk-core:0.0.7'
+	compile 'com.baijia.live:liveplayer-sdk-core:0.0.9'
 }
 ```
 如果使用到了PPT、白板、涂鸦等功能可以自行实现PPTVM、ShapeVM、DocListVM中相关接口（TODO），也可以使用我们为您提供的PPTFragment，需添加如下依赖
 ```groovy
-	compile 'com.baijia.live:liveplayer-sdk-core-ppt:0.0.7'
+	compile 'com.baijia.live:liveplayer-sdk-core-ppt:0.0.9'
 ```
 
 ## API说明
-在Application中调用
-```java
-LiveSDK.init("partnerId",LPConstants.LPDeployType.Test);
-```
-来初始化Core SDK，partnerId为第三方在百家云后台生成的第三方唯一标识。
-
 * 进入直播间
 
 LiveSDK.enterRoom目前提供两种方式进入房间
@@ -118,7 +113,7 @@ recorder.stopPublishing();    // 关闭流
 例如:发布本地音频时，先调用`recorder.publish();`然后再调用`recorder.attachAudio();`即可。
 **注意：**发布视频时需要先设置本地视频采集的preview，然后再调用`recorder.attachVideo();`
 ```java
-CameraGLSurfaceView view = new CameraGLSurfaceView(this);
+CameraGLTextureView view = new CameraGLTextureView(this);
 recorder.setPreview(view);
 ```
 除此之外，LPRecorder还提供如下一些方法满足某些高级使用场景
@@ -148,7 +143,7 @@ player.playAVClose(userId); //关闭音视频流
 ```
 **注意：**在调用`player.playVideo(userId);`前，需要设置显示视频的SurfaceView
 ```java
-SurfaceView surfaceView = ViERenderer.CreateRenderer(context, true);
+TextureView textureView = ViERenderer.CreateRenderer(context, true);
 player.setVideoView(surfaceView);
 ```
 此外，LPPlayer还提供如下一些方法满足某些高级使用场景
@@ -231,21 +226,42 @@ liveRoom.getSpeakQueueVM().getObservableOfMediaClose().observeOn(AndroidSchedule
 LPPPTFragment lppptFragment = new LPPPTFragment();
 lppptFragment.setLiveRoom(liveRoom);
 ```
+如果您想禁止学生主动滑动PPT翻页（仍然会随老师翻页），可以在学生端调用
+```java
+lppptFragment.setFlingEnable(false);
+```
+切换PPT在容器中显示全屏\铺满
+```java
+lppptFragment.setPPTShowWay(LPConstants.LPPPTShowWay.SHOW_FULL_SCREEN);
+lppptFragment.setPPTShowWay(LPConstants.LPPPTShowWay.SHOW_COVERED);
+```
+
 * 聊天（ChatVM）
 
 发送消息
 ```java
-liveRoom.getChatVM().sendMessage(string);
+liveRoom.getChatVM().sendMessage(msg);
+```
+```java
+liveRoom.getChatVM().sendMessage(msg, channel);
 ```
 接收消息
 ```java
 liveRoom.getChatVM().getObservableOfReceiveMessage().subscribe(new Action1<IMessageModel>() {
     @Override
     public void call(IMessageModel iMessageModel) {
+        String channel = iMessageModel.getChannel();
     	String msg = iMessageModel.getFrom().getName() + ":" + iMessageModel.getContent();
     }
 });
 ```
+或者也可以使用
+```java
+int getMessageCount();
+IMessageModel getMessage(int position);
+```
+来绑定您列表的adapter，并在`liveRoom.getChatVM().getObservableOfNotifyDataChange().subscribe(subscriber);`更新列表即可
+
 * 在线用户（OnlineUserVM）
 
 在线用户模块可以通过liveRoom.getOnlineUserVM获得，其提供了
@@ -290,7 +306,7 @@ liveRoom.getObservableOfUserNumberChange().observeOn(AndroidSchedulers.mainThrea
 });
 ```
 * 被踢下线（单点登录）
-可以监听此回调，ILoginConflictModel会返回冲突的用户在什么终端登录，被踢时也会报LPError
+  可以监听此回调，ILoginConflictModel会返回冲突的用户在什么终端登录，被踢时也会报LPError
 ```java
 liveRoom.getObservableOfLoginConflict().observeOn(AndroidSchedulers.mainThread())
 .subscribe(new Action1<ILoginConflictModel>() {
@@ -313,7 +329,7 @@ liveRoom.requestForbidAllChat(false);                       // 关闭全体禁�
 Observable<Boolean> getObservableOfForbidAllChatStatus();   // 全体禁言状态KVO
 ```
 * 单个禁言
-单个用户禁言，仅限**老师**角色
+  单个用户禁言，仅限**老师**角色
 ```java
 /**
 * 禁言(teacher only)
@@ -362,6 +378,18 @@ liveRoom.getObservableOfAnnouncementChange().observeOn(AndroidSchedulers.mainThr
     }
 })
 ```
+* 自定义事件广播接收
+```java
+liveRoom.getObservableOfBroadcast().observeOn(AndroidSchedulers.mainThread())
+.subscribe(new LPErrorPrintSubscriber<LPKVModel>() {
+    @Override
+    public void call(LPKVModel lpkvModel) {
+        String key = lpkvModel.key;
+        String value = lpkvModel.value;
+    }
+});
+```
+
 * 出错回调
 ```java
 liveRoom.setOnLiveRoomListener(new OnLiveRoomListener() {

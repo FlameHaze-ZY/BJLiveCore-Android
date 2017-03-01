@@ -1,7 +1,54 @@
+
+CHANGELOG 0.0.8 & 0.0.9
+==============
+## API changes
+- 无需在Application初始化了~~LiveSDK.init("partnerId",LPConstants.LPDeployType.Test);~~，默认为Product环境
+- Recorder和Player录制或者播放视频时，使用新的TextureView代替了SurfaceView，让您的视频也可以拥有完美的动画效果
+视频采集的view
+```java
+CameraGLTextureView view = new CameraGLTextureView(this);
+recorder.setPreview(view);
+```
+视频播放的view
+```java
+TextureView textureView = ViERenderer.CreateRenderer(context, true);
+player.setVideoView(surfaceView);
+```
+- 移除一个打印Log的第三方依赖`com.orhanobut:logger`
+
+## new features
+- 聊天模块新增绑定Adapter的方法
+```java
+int getMessageCount();
+IMessageModel getMessage(int position);
+Observable<Void> getObservableOfNotifyDataChange();
+```
+- 聊天模块新增channel支持。在IMessageModel中增加channel字段，发送消息时，使用
+```java
+liveRoom.getChatVM().sendMessage(msg, channel);
+```
+来指定channel
+- PPT模块增加禁止学生主动滑动PPT翻页（仍然会随老师翻页）
+```java
+lppptFragment.setFlingEnable(false);
+```
+- 增加了一个接收用户自定义广播事件的接口
+```java
+liveRoom.getObservableOfBroadcast().observeOn(AndroidSchedulers.mainThread())
+.subscribe(new LPErrorPrintSubscriber<LPKVModel>() {
+    @Override
+    public void call(LPKVModel lpkvModel) {
+        String key = lpkvModel.key;
+        String value = lpkvModel.value;
+    }
+});
+```
+
 CHANGELOG 0.0.7
 ==============
 ## bugfix
 - 修复后进教室的学生PPT页码不对的问题
+
 
 CHANGELOG 0.0.6
 ==============
@@ -46,11 +93,13 @@ liveRoom.getObservableOfIsSelfChatForbid().subscribe(new Action1<Boolean>() {
 })
 ```
 
+
 CHANGELOG 0.0.5
 ==============
 ## bugfix
 - 修复了在线用户人数不对的问题
 - 修复了在PPT在滑动过程中退出教室导致的崩溃问题
+
 
 CHANGELOG 0.0.4
 ==============

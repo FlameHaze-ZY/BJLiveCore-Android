@@ -26,8 +26,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".WhiteBoardActivity" android:screenOrientation="landscape"/>
-
         <activity android:name=".JoinCodeActivity" android:screenOrientation="portrait"/>
 
     </application>
