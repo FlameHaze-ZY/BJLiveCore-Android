@@ -1,3 +1,77 @@
+CHANGELOG 0.1.2
+==============
+## new features
+### 增加了在线课堂随堂测验功能
+- 获取历史测验
+```java
+liveRoom.getSurveyVM().requestPreviousSurvey(liveRoom.getCurrentUser().getNumber())
+        .subscribe(new LPErrorPrintSubscriber<IPreviousSurveyModel>() {
+    @Override
+    public void call(IPreviousSurveyModel iPreviousSurveyModel) {
+        iPreviousSurveyModel.getPreviousSurvey() //历史测验List
+        iPreviousSurveyModel.getRightCount()     //当前用户答对几题
+        iPreviousSurveyModel.getWrongCount()     //当前用户打错几题
+    }
+});
+```
+- 收到老师发送新的测验
+```java
+liveRoom.getSurveyVM().getObservableOfSurveyReceive().observeOn(AndroidSchedulers.mainThread()).subscribe(new LPErrorPrintSubscriber<ISurveyReceiveModel>() {
+    @Override
+    public void call(final ISurveyReceiveModel iSurveyReceiveModel) {
+        iSurveyReceiveModel.getSurvey()  //新的测验
+    }
+});
+```
+- 学生发送答案。
+```java
+/**
+ * 学生发送答案
+ *
+ * @param order      题目序号
+ * @param userName   学生姓名
+ * @param userNumber
+ * @param answer     [A, B ,C] 数组元素是 option 下 key
+ * @param result     0 正确 1 错误 -1 没有答案
+ */
+liveRoom.getSurveyVM().sendAnswer(int order, String userName, String userNumber, List<String> answer, int result);
+```
+- 服务器答题统计。服务器会10秒汇总一次，如果有答题状态更新的话就广播下发
+```java
+/**
+ * 收到测验统计结果回调
+ *
+ * @return
+ */
+Observable<ISurveyStatisticModel> getObservableOfAnswerStatistic();
+```
+- 模型接口说明
+```java
+ISurveyModel {
+    int getOrder();                             //题目序号
+    String getQuestion();                       //获取题干
+    int getAnswerCount();                       //正确答案个数
+    List<ISurveyOptionModel> getOptionList();   //各个选项
+    int getRightCount();                        //答对人数
+    int getWrongCount();                        //答错人数
+    int getFreeCount();                         //未答人数
+}
+ISurveyOptionModel{
+    String getKey();                            //获得选项标识 A,B,C \ 1,2,3 ...
+    String getValue();                          //获得选项值
+    boolean isAnswer();                         //是否是正确答案
+    int getUserCount();                         //该选项选择人数
+}
+ISurveyStatisticModel{
+    int getOrder();                              //题目序号
+    int getRightCount();                         //答对人数
+    int getWrongCount();                         //答错人数
+    int getFreeCount();                          //未答人数
+    Map<String, Integer> getResult();            //获得统计结果  key 是 option key， value 是选择的人数
+}
+
+```
+
 CHANGELOG 0.1.1
 ==============
 ## bugfix
