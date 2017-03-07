@@ -410,7 +410,7 @@ liveRoom.getSurveyVM().getObservableOfSurveyReceive().observeOn(AndroidScheduler
  * @param userName   学生姓名
  * @param userNumber
  * @param answer     [A, B ,C] 数组元素是 option 下 key
- * @param result     0 正确 1 错误 -1 没有答案
+ * @param result     0 正确 1 错误 -1 没有答案（老师没有设置正确答案，所有的option的isAnswer都是false）
  */
 liveRoom.getSurveyVM().sendAnswer(int order, String userName, String userNumber, List<String> answer, int result);
 ```
@@ -428,11 +428,7 @@ Observable<ISurveyStatisticModel> getObservableOfAnswerStatistic();
 ISurveyModel {
     int getOrder();                             //题目序号
     String getQuestion();                       //获取题干
-    int getAnswerCount();                       //正确答案个数
     List<ISurveyOptionModel> getOptionList();   //各个选项
-    int getRightCount();                        //答对人数
-    int getWrongCount();                        //答错人数
-    int getFreeCount();                         //未答人数
 }
 ISurveyOptionModel{
     String getKey();                            //获得选项标识 A,B,C \ 1,2,3 ...
