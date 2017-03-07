@@ -1,3 +1,9 @@
+CHANGELOG 0.1.4
+==============
+## bugfix
+- 修复断线重连后在线用户列表里出现两个自己
+- 修复小测统计某些字段对不上的问题
+
 CHANGELOG 0.1.3
 ==============
 ## new features
@@ -69,9 +75,6 @@ ISurveyOptionModel{
 }
 ISurveyStatisticModel{
     int getOrder();                              //题目序号
-    int getRightCount();                         //答对人数
-    int getWrongCount();                         //答错人数
-    int getFreeCount();                          //未答人数
     Map<String, Integer> getResult();            //获得统计结果  key 是 option key， value 是选择的人数
 }
 

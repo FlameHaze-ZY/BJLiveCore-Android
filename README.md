@@ -438,9 +438,6 @@ ISurveyOptionModel{
 }
 ISurveyStatisticModel{
     int getOrder();                              //题目序号
-    int getRightCount();                         //答对人数
-    int getWrongCount();                         //答错人数
-    int getFreeCount();                          //未答人数
     Map<String, Integer> getResult();            //获得统计结果  key 是 option key， value 是选择的人数
 }
 
