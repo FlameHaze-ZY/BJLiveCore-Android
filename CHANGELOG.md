@@ -1,3 +1,13 @@
+CHANGELOG 0.1.6
+==============
+## bugfix
+- 修复了因美颜开启导致的切换时采集视频异常
+## new features
+- SpeakQueueVM增加了学生主动取消举手功能
+```java
+liveRoom.getSpeakQueueVM().cancelSpeakApply();
+```
+
 CHANGELOG 0.1.5
 ==============
 ## bugfix
