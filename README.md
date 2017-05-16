@@ -25,12 +25,12 @@ maven { url 'https://raw.github.com/baijia/maven/master/' }
 * 在build.gradle中添加依赖
 ```groovy
 dependencies {
-	compile 'com.baijia.live:liveplayer-sdk-core:0.2.1'
+	compile 'com.baijia.live:liveplayer-sdk-core:0.2.6'
 }
 ```
 如果使用到了PPT、白板、涂鸦等功能可以自行实现PPTVM、ShapeVM、DocListVM中相关接口（TODO），也可以使用我们为您提供的PPTFragment，需添加如下依赖
 ```groovy
-	compile 'com.baijia.live:liveplayer-sdk-core-ppt:0.1.3'
+	compile 'com.baijia.live:liveplayer-sdk-core-ppt:0.2.0'
 ```
 
 ## API说明

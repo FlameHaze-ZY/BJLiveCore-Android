@@ -23,7 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baijiahulian.avsdk.liveplayer.CameraGLTextureView;
-import com.baijiahulian.avsdk.liveplayer.ViERenderer;
+import com.baijiahulian.avsdk.liveplayer.ViETextureViewRenderer;
 import com.baijiahulian.livecore.LiveSDK;
 import com.baijiahulian.livecore.context.LPConstants;
 import com.baijiahulian.livecore.context.LPError;
@@ -500,7 +500,7 @@ public class JoinCodeActivity extends AppCompatActivity {
         });
 
 
-        textureView = ViERenderer.CreateRenderer(JoinCodeActivity.this, true);
+        textureView = ViETextureViewRenderer.CreateRenderer(JoinCodeActivity.this, true);
         playerLayout.addView(textureView);
         player.setVideoView(textureView);
 
@@ -541,7 +541,7 @@ public class JoinCodeActivity extends AppCompatActivity {
     }
 
     public void enterRoom(final Context context, final String code, final String name) {
-        LiveSDK.enterRoom(context, code, name, new LPLaunchListener() {
+        liveRoom = LiveSDK.enterRoom(context, code, name, new LPLaunchListener() {
             @Override
             public void onLaunchSteps(int step, int totalStep) {
                 Log.i("init steps", "step:" + step + "/" + totalStep);
