@@ -28,7 +28,7 @@ public class JsonUtils {
 
     static {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LPConstants.LPClassType.class, new LPClassTypeDeserializer());
+        gsonBuilder.registerTypeAdapter(LPConstants.LPRoomType.class, new LPClassTypeDeserializer());
         gsonBuilder.registerTypeAdapter(Date.class, new LPDateDeserializer());
         gson = gsonBuilder.create();
     }
@@ -47,13 +47,13 @@ public class JsonUtils {
     }
 
 
-    private static class LPClassTypeDeserializer implements JsonDeserializer<LPConstants.LPClassType>, JsonSerializer<LPConstants.LPClassType> {
+    private static class LPClassTypeDeserializer implements JsonDeserializer<LPConstants.LPRoomType>, JsonSerializer<LPConstants.LPRoomType> {
 
         @Override
-        public LPConstants.LPClassType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+        public LPConstants.LPRoomType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
-            LPConstants.LPClassType[] classTypes = LPConstants.LPClassType.values();
-            for (LPConstants.LPClassType classType : classTypes) {
+            LPConstants.LPRoomType[] classTypes = LPConstants.LPRoomType.values();
+            for (LPConstants.LPRoomType classType : classTypes) {
                 if (json.getAsInt() == classType.getType()) {
                     return classType;
                 }
@@ -62,7 +62,7 @@ public class JsonUtils {
         }
 
         @Override
-        public JsonElement serialize(LPConstants.LPClassType classType, Type arg1,
+        public JsonElement serialize(LPConstants.LPRoomType classType, Type arg1,
                                      JsonSerializationContext arg2) {
             return new JsonPrimitive(classType.getType());
         }

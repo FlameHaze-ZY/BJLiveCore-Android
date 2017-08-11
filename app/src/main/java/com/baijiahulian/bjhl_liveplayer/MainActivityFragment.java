@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,6 +46,8 @@ public class MainActivityFragment extends Fragment {
         password = (EditText) view.findViewById(R.id.pw_join_code);
         btnLogin = (Button) view.findViewById(R.id.btnLogin);
         initData();
+
+//        WebRtcAudioManager
         LPRxUtils.clicks(btnLogin)
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
                 .subscribe(new Action1<Void>() {

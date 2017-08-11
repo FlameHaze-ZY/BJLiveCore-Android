@@ -22,15 +22,16 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baijiahulian.avsdk.liveplayer.CameraGLTextureView;
-import com.baijiahulian.avsdk.liveplayer.ViETextureViewRenderer;
+import com.baijia.baijiashilian.liveplayer.CameraGLTextureView;
+import com.baijia.baijiashilian.liveplayer.ViETextureViewRenderer;
 import com.baijiahulian.livecore.LiveSDK;
 import com.baijiahulian.livecore.context.LPConstants;
 import com.baijiahulian.livecore.context.LPError;
 import com.baijiahulian.livecore.context.LiveRoom;
 import com.baijiahulian.livecore.context.OnLiveRoomListener;
 import com.baijiahulian.livecore.launch.LPLaunchListener;
-import com.baijiahulian.livecore.listener.OnRollCallListener;
+import com.baijiahulian.livecore.listener.OnPhoneRollCallListener;
+import com.baijiahulian.livecore.models.imodels.IAnnouncementModel;
 import com.baijiahulian.livecore.models.imodels.ILoginConflictModel;
 import com.baijiahulian.livecore.models.imodels.IMediaControlModel;
 import com.baijiahulian.livecore.models.imodels.IMediaModel;
@@ -48,10 +49,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.observables.ConnectableObservable;
 
 public class JoinCodeActivity extends AppCompatActivity {
 
@@ -306,9 +307,8 @@ public class JoinCodeActivity extends AppCompatActivity {
             }
         };
         // 进入房间首次获取发言队列
-        ConnectableObservable<List<IMediaModel>> obs = liveRoom.getSpeakQueueVM().getObservableOfActiveUsers();
+        Observable<List<IMediaModel>> obs = liveRoom.getSpeakQueueVM().getObservableOfActiveUsers();
         obs.subscribe(subs);
-        obs.connect();
         liveRoom.getSpeakQueueVM().requestActiveUsers();
         // 发言人音视频状态改变
         liveRoom.getSpeakQueueVM().getObservableOfMediaChange().observeOn(AndroidSchedulers.mainThread())
@@ -366,21 +366,18 @@ public class JoinCodeActivity extends AppCompatActivity {
                         tvMessages.append("\n");
                     }
                 });
-        // 主动请求公告
-        liveRoom.requestAnnouncement(new LPErrorPrintSubscriber<String>() {
-            @Override
-            public void call(String s) {
-                tvMessages.append("公告:" + s + "\n");
-            }
-        });
         // 公告修改通知
         liveRoom.getObservableOfAnnouncementChange().observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new LPErrorPrintSubscriber<String>() {
+                .subscribe(new LPErrorPrintSubscriber<IAnnouncementModel>() {
                     @Override
-                    public void call(String s) {
-                        tvMessages.append("公告:" + s + "\n");
+                    public void call(IAnnouncementModel iAnnouncementModel) {
+                        tvMessages.append(iAnnouncementModel.getContent() );
+                        tvMessages.append("\n");
                     }
                 });
+        // 主动请求公告
+        liveRoom.requestAnnouncement();
+
         liveRoom.getObservableOfClassStart().subscribe(new LPErrorPrintSubscriber<Void>() {
             @Override
             public void call(Void aVoid) {
@@ -478,8 +475,7 @@ public class JoinCodeActivity extends AppCompatActivity {
             liveRoom.requestClassStart();
 
         // 点名
-        liveRoom.setOnRollCallListener(new OnRollCallListener() {
-
+        liveRoom.setOnRollCallListener(new OnPhoneRollCallListener() {
             @Override
             public void onRollCall(int time, final RollCall rollCallListener) {
                 dialog = new AlertDialog.Builder(JoinCodeActivity.this).setTitle("点名了")
@@ -500,6 +496,7 @@ public class JoinCodeActivity extends AppCompatActivity {
         });
 
 
+//        ViERenderer
         textureView = ViETextureViewRenderer.CreateRenderer(JoinCodeActivity.this, true);
         playerLayout.addView(textureView);
         player.setVideoView(textureView);
@@ -541,6 +538,7 @@ public class JoinCodeActivity extends AppCompatActivity {
     }
 
     public void enterRoom(final Context context, final String code, final String name) {
+        LiveSDK.init(LPConstants.LPDeployType.Test);
         liveRoom = LiveSDK.enterRoom(context, code, name, new LPLaunchListener() {
             @Override
             public void onLaunchSteps(int step, int totalStep) {

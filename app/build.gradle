@@ -7,23 +7,23 @@ android {
     defaultConfig {
         applicationId "com.baijiahulian.liveplayer"
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
 
 dependencies {
-    compile 'com.android.support:design:25.3.0'
+    compile 'com.android.support:design:25.3.1'
 
-    compile 'com.baijia.live:liveplayer-sdk-core:0.2.6'
-    compile 'com.baijia.live:liveplayer-sdk-core-ppt:0.2.0'
+    compile 'com.baijia.live:liveplayer-sdk-core:0.4.10'
+    compile 'com.baijia.live:liveplayer-sdk-core-ppt:0.3.10'
     compile 'com.baijia.common:common-tools:1.0.1' // crash handler
 
 }
