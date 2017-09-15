@@ -538,7 +538,7 @@ public class JoinCodeActivity extends AppCompatActivity {
     }
 
     public void enterRoom(final Context context, final String code, final String name) {
-        LiveSDK.init(LPConstants.LPDeployType.Test);
+//         LiveSDK.init(LPConstants.LPDeployType.Test);
         liveRoom = LiveSDK.enterRoom(context, code, name, new LPLaunchListener() {
             @Override
             public void onLaunchSteps(int step, int totalStep) {
