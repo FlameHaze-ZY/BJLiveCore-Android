@@ -13,14 +13,14 @@ liveplayer-sdk-core
 - **[PPT](link_ppt)**单独把课件模块拆出来了，主要功能包含课件展示、画笔交互、动态PPT效果等，依赖于**[Core](https://github.com/baijia/BJLiveCore-Android)**。
 
 ## 功能简介
-###直播间角色
+### 直播间角色
 
 | 角色   |                    功能                    |
 | :--- | :--------------------------------------: |
 | 老师   | 拥有直播间最高权限，可以设置上下课、发公告、处理他人举手、远程开关他人音视频、录课、开关聊天禁言等 |
 | 助教   |              管理员，拥有部分老师的权限               |
 | 学生   |             观众，举手后可与其他人音视频连麦             |
-###Core模块介绍
+### Core模块介绍
 |  模块  | 功能                                       |
 | :--: | :--------------------------------------- |
 | 音视频  | 音视频处理模块LPAVManager，分为LPRecorder音视频录制、推流模块和LPPlayer音视频拉流、播放模块 |
@@ -51,8 +51,8 @@ dependencies {
 ```
 
 ## API说明
-###直播间相关API
-####进入直播间
+### 直播间相关API
+#### 进入直播间
 
 LiveSDK.enterRoom目前提供两种方式进入房间
 ```java
@@ -77,7 +77,7 @@ public static void enterRoom(Context context, final long roomId, String userNumb
 public static void enterRoom(Context context, String joinCode, String userName, final LPLaunchListener listener)
 ```
 Sign原则上由后端计算返给前端，[计算规则](http://dev.baijiayun.com/default/wiki/detail/4#h3)
-####进入房间回调说明
+#### 进入房间回调说明
 ```java
 LPLaunchListener {
     @Override
@@ -101,8 +101,8 @@ LPLaunchListener {
 ```java
 liveRoom.quitRoom();
 ```
-###音视频LPAVManager
-####发布音视频（LPRecorder）
+### 音视频LPAVManager
+#### 发布音视频（LPRecorder）
   发布音视频主要使用到了LPRecorder。基本方法如下
 ```java
 LPRecorder recorder = liveRoom.getRecorder();
@@ -136,7 +136,7 @@ void closeBeautyFilter();      //关闭美颜模式
 int getPublishIndex();         //上行服务器index
 LPIpAddress getUpLinkServer(); //获得上行服务器地址
 ```
-####播放音视频（LPPlayer）
+#### 播放音视频（LPPlayer）
 如果有用户（老师/学生）正在发布音视频，这个用户会出现在发言列表SpeakQueueVM的ActiveUser中。当获得这个用户对象的userId就能播放其音视频流
 ```java
 LPPlayer player = liveRoom.getPlayer();
@@ -159,7 +159,7 @@ void setCurrentUdpDownLinkIndex(int index);
 void addPlayerListener(LPPlayerListener listener);     //增加播放音视频回调
 void removePlayerListener(LPPlayerListener listener);  //移除播放音视频回调
 ```
-###发言队列（SpeakQueueVM）
+### 发言队列（SpeakQueueVM）
 请求发言队列
 ```java
 liveRoom.getSpeakQueueVM().requestActiveUsers();
@@ -221,7 +221,7 @@ liveRoom.getSpeakQueueVM().getObservableOfMediaClose().observeOn(AndroidSchedule
     }
 });
 ```
-###课件模块
+### 课件模块
   如果您使用了我们提供的PPTFragment，如下初始化即可
 ```java
 LPPPTFragment lppptFragment = new LPPPTFragment();
@@ -252,8 +252,8 @@ lppptFragment.showPPTPageView();
 lppptFragment.hidePPTPageView();
 ```
 
-###聊天（ChatVM）
-####发送消息
+### 聊天（ChatVM）
+#### 发送消息
 文字消息
 ```java
 liveRoom.getChatVM().sendMessage(msg);
@@ -274,7 +274,7 @@ List<IExpressionModel> expressions = liveRoom.getChatVM().getExpressions();
 String imageContent = LPChatMessageParser.toImageMessage(imageUrl);
 liveRoom.getChatVM().sendImageMessage(imageContent, imageWidth, imageHeight);
 ```
-####接收消息
+#### 接收消息
 收到新消息
 ```java
 liveRoom.getChatVM().getObservableOfReceiveMessage().subscribe(new Action1<IMessageModel>() {
@@ -292,7 +292,7 @@ IMessageModel getMessage(int position);
 ```
 来绑定您列表的adapter，并在`liveRoom.getChatVM().getObservableOfNotifyDataChange().subscribe(subscriber);`更新列表即可
 
-###在线用户（OnlineUserVM）
+### 在线用户（OnlineUserVM）
 在线用户模块可以通过liveRoom.getOnlineUserVM获得，其提供了
 ```java
 int getUserCount();
@@ -310,7 +310,7 @@ liveRoom.getOnlineUserVM().getObservableOfOnlineUser().subscribe(new LPErrorPrin
     }
 });
 ```
-####用户进入房间（房间人数小于100人时）
+#### 用户进入房间（房间人数小于100人时）
 ```java
 liveRoom.getObservableOfUserIn().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<IUserInModel>() {
     @Override
@@ -318,7 +318,7 @@ liveRoom.getObservableOfUserIn().observeOn(AndroidSchedulers.mainThread()).subsc
     }
 });
 ```
-####用户退出房间（房间人数小于100人时）
+#### 用户退出房间（房间人数小于100人时）
 ```java
 liveRoom.getObservableOfUserOut().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<String>() {
     @Override
@@ -326,7 +326,7 @@ liveRoom.getObservableOfUserOut().observeOn(AndroidSchedulers.mainThread()).subs
     }
 });
 ```
-####房间人数变化（实时）
+#### 房间人数变化（实时）
 ```java
 liveRoom.getObservableOfUserNumberChange().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
     @Override
@@ -334,8 +334,8 @@ liveRoom.getObservableOfUserNumberChange().observeOn(AndroidSchedulers.mainThrea
     }
 });
 ```
-###随堂测验功能 （SurveyVM）
-####获取历史测验
+### 随堂测验功能 （SurveyVM）
+#### 获取历史测验
 ```java
 liveRoom.getSurveyVM().requestPreviousSurvey(liveRoom.getCurrentUser().getNumber())
         .subscribe(new LPErrorPrintSubscriber<IPreviousSurveyModel>() {
@@ -347,7 +347,7 @@ liveRoom.getSurveyVM().requestPreviousSurvey(liveRoom.getCurrentUser().getNumber
     }
 });
 ```
-####收到老师发送新的测验
+#### 收到老师发送新的测验
 ```java
 liveRoom.getSurveyVM().getObservableOfSurveyReceive().observeOn(AndroidSchedulers.mainThread()).subscribe(new LPErrorPrintSubscriber<ISurveyReceiveModel>() {
     @Override
@@ -356,7 +356,7 @@ liveRoom.getSurveyVM().getObservableOfSurveyReceive().observeOn(AndroidScheduler
     }
 });
 ```
-####学生发送答案
+#### 学生发送答案
 ```java
 /**
  * 学生发送答案
@@ -369,7 +369,7 @@ liveRoom.getSurveyVM().getObservableOfSurveyReceive().observeOn(AndroidScheduler
  */
 liveRoom.getSurveyVM().sendAnswer(int order, String userName, String userNumber, List<String> answer, int result);
 ```
-####服务器答题统计
+#### 服务器答题统计
 服务器会10秒汇总一次，如果有答题状态更新的话就广播下发
 ```java
 /**
@@ -398,8 +398,8 @@ ISurveyStatisticModel{
 }
 
 ```
-###LiveRoom其他API
-####上课/下课
+### LiveRoom其他API
+#### 上课/下课
 ```java
 liveRoom.requestClassStart();
 liveRoom.requestClassEnd();
@@ -407,15 +407,15 @@ liveRoom.getObservableOfClassStart().subscribe(subscriber);
 liveRoom.getObservableOfClassEnd().subscribe(subscriber);
 ```
 一般地，requestClassStart和requestClassEnd均由**老师**角色调用
-####获取当前用户
+#### 获取当前用户
 ```java
 IUserModel currentUser = liveRoom.getCurrentUser();
 ```
-####获取老师用户
+#### 获取老师用户
 ```java
 IUserModel currentUser = liveRoom.getTeacherUser();
 ```
-####被踢下线（单点登录）
+#### 被踢下线（单点登录）
   可以监听此回调，ILoginConflictModel会返回冲突的用户在什么终端登录，被踢时也会报LPError
 ```java
 liveRoom.getObservableOfLoginConflict().observeOn(AndroidSchedulers.mainThread())
@@ -425,20 +425,20 @@ liveRoom.getObservableOfLoginConflict().observeOn(AndroidSchedulers.mainThread()
     }
 });
 ```
-####云端录制
+#### 云端录制
   云端录制功能只有**老师**角色可以调用
 ```java
 liveRoom.requestCloudRecord(ture);                          // 开始录制
 liveRoom.requestCloudRecord(false);                         // 停止录制
 Observable<Boolean> getObservableOfCloudRecordStatus();     // 云端录制状态KVO
 ```
-####全体禁言
+#### 全体禁言
 ```java
 liveRoom.requestForbidAllChat(true);                        // 开启全体禁言
 liveRoom.requestForbidAllChat(false);                       // 关闭全体禁言
 Observable<Boolean> getObservableOfForbidAllChatStatus();   // 全体禁言状态KVO
 ```
-####单个禁言
+#### 单个禁言
 单个用户禁言，仅限**老师**角色
 ```java
 /**
@@ -465,7 +465,7 @@ liveRoom.getObservableOfIsSelfChatForbid().subscribe(new Action1<Boolean>() {
     }
 })
 ```
-####直播间公告
+#### 直播间公告
 
 主动获取直播间公告
 ```java
@@ -488,7 +488,7 @@ liveRoom.getObservableOfAnnouncementChange().observeOn(AndroidSchedulers.mainThr
     }
 })
 ```
-####自定义事件广播接收
+#### 自定义事件广播接收
 ```java
 liveRoom.getObservableOfBroadcast().observeOn(AndroidSchedulers.mainThread())
 .subscribe(new LPErrorPrintSubscriber<LPKVModel>() {
@@ -500,7 +500,7 @@ liveRoom.getObservableOfBroadcast().observeOn(AndroidSchedulers.mainThread())
 });
 ```
 
-###出错回调
+### 出错回调
 ```java
 liveRoom.setOnLiveRoomListener(new OnLiveRoomListener() {
     @Override
@@ -508,7 +508,7 @@ liveRoom.setOnLiveRoomListener(new OnLiveRoomListener() {
     }
 });
 ```
-####错误码
+#### 错误码
 ```java
 public static final int CODE_ERROR_NETWORK_FAILURE = -0x01;//无网
 public static final int CODE_ERROR_NETWORK_MOBILE = -0x02;//当前网络为mobile
