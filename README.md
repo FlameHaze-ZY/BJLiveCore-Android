@@ -23,14 +23,14 @@ liveplayer-sdk-core
 
 ### Core模块介绍
 
-|  模块  | 功能                                       |
-| :--: | :--------------------------------------- |
-| 音视频  | 音视频处理模块LPAVManager，分为LPRecorder音视频录制、推流模块和LPPlayer音视频拉流、播放模块 |
-| 发言队列 | SpeakQueueVM房间内发言列表，包含学生举手逻辑、老师远程控制逻辑等   |
-| 在线用户 | OnlineUserVM房间内用户列表，包含用户列表改变监听、绑定adapter等 |
-| 文字聊天 | ChatVM聊天模块，提供了收发文字、表情和图片消息等功能            |
-| 课件管理 | DocListVM课件管理模块，提供房间内增加、删除课件等功能          |
-| 其他功能 | LiveRoom还提供云端录课、上下课、公告、禁言、随堂测验等一系列功能，具体请参见相关API |
+|             模块              | 功能                                       |
+| :-------------------------: | :--------------------------------------- |
+|   [音视频](#音视频LPAVManager)    | 音视频处理模块LPAVManager，分为LPRecorder音视频录制、推流模块和LPPlayer音视频拉流、播放模块 |
+| [发言队列](#发言队列（SpeakQueueVM）) | SpeakQueueVM房间内发言列表，包含学生举手逻辑、老师远程控制逻辑等   |
+| [在线用户](#在线用户（OnlineUserVM）) | OnlineUserVM房间内用户列表，包含用户列表改变监听、绑定adapter等 |
+|     [IM聊天](#聊天（ChatVM）)     | ChatVM聊天模块，提供了收发文字、表情和图片消息等功能            |
+|        [课件管理](#课件模块)        | DocListVM课件管理模块，提供房间内增加、删除课件等功能          |
+|   [其他功能](#LiveRoom其他API)    | LiveRoom还提供[云端录课](#云端录制)、[上下课](#上课/下课)、[公告](#直播间公告)、[禁言](#全体禁言)、[随堂测验](#随堂测验功能 （SurveyVM）)等一系列功能，具体请参见相关API |
 
 ## 集成SDK
 * 添加maven仓库
@@ -223,76 +223,6 @@ liveRoom.getSpeakQueueVM().getObservableOfMediaClose().observeOn(AndroidSchedule
     }
 });
 ```
-### 课件模块
-  如果您使用了我们提供的PPTFragment，如下初始化即可
-```java
-LPPPTFragment lppptFragment = new LPPPTFragment();
-lppptFragment.setLiveRoom(liveRoom);
-```
-学生端主动滑动PPT翻页的逻辑是不大于老师PPT的当前页面。如果您想禁止学生主动滑动PPT翻页（仍然会随老师翻页），可以在学生端调用
-```java
-lppptFragment.setFlingEnable(false);
-boolean lppptFragment.isFlingEnable(); //是否支持滑动
-```
-切换PPT在容器中显示全屏\铺满
-```java
-lppptFragment.setPPTShowWay(LPConstants.LPPPTShowWay.SHOW_FULL_SCREEN);
-lppptFragment.setPPTShowWay(LPConstants.LPPPTShowWay.SHOW_COVERED);
-```
-画笔模式\浏览模式切换
-```java
-lppptFragment.changePPTCanvasMode();
-boolean lppptFragment.isEditable(); //是否在画笔模式
-```
-清除画笔
-```java
-lppptFragment.clearCanvas();
-```
-显示/隐藏页码
-```java
-lppptFragment.showPPTPageView();
-lppptFragment.hidePPTPageView();
-```
-
-### 聊天（ChatVM）
-#### 发送消息
-文字消息
-```java
-liveRoom.getChatVM().sendMessage(msg);
-```
-```java
-liveRoom.getChatVM().sendMessage(msg, channel);
-```
-发送表情
-```java
-liveRoom.getChatVM().sendEmojiMessage("[" + emoji.key + "]");
-```
-获取配置的表情库
-```java
-List<IExpressionModel> expressions = liveRoom.getChatVM().getExpressions();
-```
-发送图片
-```java
-String imageContent = LPChatMessageParser.toImageMessage(imageUrl);
-liveRoom.getChatVM().sendImageMessage(imageContent, imageWidth, imageHeight);
-```
-#### 接收消息
-收到新消息
-```java
-liveRoom.getChatVM().getObservableOfReceiveMessage().subscribe(new Action1<IMessageModel>() {
-    @Override
-    public void call(IMessageModel iMessageModel) {
-        String channel = iMessageModel.getChannel();
-    	String msg = iMessageModel.getFrom().getName() + ":" + iMessageModel.getContent();
-    }
-});
-```
-或者也可以使用
-```java
-int getMessageCount();
-IMessageModel getMessage(int position);
-```
-来绑定您列表的adapter，并在`liveRoom.getChatVM().getObservableOfNotifyDataChange().subscribe(subscriber);`更新列表即可
 
 ### 在线用户（OnlineUserVM）
 在线用户模块可以通过liveRoom.getOnlineUserVM获得，其提供了
@@ -336,6 +266,78 @@ liveRoom.getObservableOfUserNumberChange().observeOn(AndroidSchedulers.mainThrea
     }
 });
 ```
+
+### 聊天（ChatVM）
+#### 发送消息
+文字消息
+```java
+liveRoom.getChatVM().sendMessage(msg);
+```
+```java
+liveRoom.getChatVM().sendMessage(msg, channel);
+```
+发送表情
+```java
+liveRoom.getChatVM().sendEmojiMessage("[" + emoji.key + "]");
+```
+获取配置的表情库
+```java
+List<IExpressionModel> expressions = liveRoom.getChatVM().getExpressions();
+```
+发送图片
+```java
+String imageContent = LPChatMessageParser.toImageMessage(imageUrl);
+liveRoom.getChatVM().sendImageMessage(imageContent, imageWidth, imageHeight);
+```
+#### 接收消息
+收到新消息
+```java
+liveRoom.getChatVM().getObservableOfReceiveMessage().subscribe(new Action1<IMessageModel>() {
+    @Override
+    public void call(IMessageModel iMessageModel) {
+        String channel = iMessageModel.getChannel();
+    	String msg = iMessageModel.getFrom().getName() + ":" + iMessageModel.getContent();
+    }
+});
+```
+或者也可以使用
+```java
+int getMessageCount();
+IMessageModel getMessage(int position);
+```
+来绑定您列表的adapter，并在`liveRoom.getChatVM().getObservableOfNotifyDataChange().subscribe(subscriber);`更新列表即可
+
+### 课件模块
+  如果您使用了我们提供的PPTFragment，如下初始化即可
+```java
+LPPPTFragment lppptFragment = new LPPPTFragment();
+lppptFragment.setLiveRoom(liveRoom);
+```
+学生端主动滑动PPT翻页的逻辑是不大于老师PPT的当前页面。如果您想禁止学生主动滑动PPT翻页（仍然会随老师翻页），可以在学生端调用
+```java
+lppptFragment.setFlingEnable(false);
+boolean lppptFragment.isFlingEnable(); //是否支持滑动
+```
+切换PPT在容器中显示全屏\铺满
+```java
+lppptFragment.setPPTShowWay(LPConstants.LPPPTShowWay.SHOW_FULL_SCREEN);
+lppptFragment.setPPTShowWay(LPConstants.LPPPTShowWay.SHOW_COVERED);
+```
+画笔模式\浏览模式切换
+```java
+lppptFragment.changePPTCanvasMode();
+boolean lppptFragment.isEditable(); //是否在画笔模式
+```
+清除画笔
+```java
+lppptFragment.clearCanvas();
+```
+显示/隐藏页码
+```java
+lppptFragment.showPPTPageView();
+lppptFragment.hidePPTPageView();
+```
+
 ### 随堂测验功能 （SurveyVM）
 #### 获取历史测验
 ```java
