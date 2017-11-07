@@ -44,12 +44,12 @@ maven { url 'http://live-cdn.baijiayun.com/android-sdk/' }
 * 在build.gradle中添加依赖
 ```groovy
 dependencies {
-	compile 'com.baijia.live:liveplayer-sdk-core:0.4.10'
+	compile 'com.baijia.live:liveplayer-sdk-core:1.0.1'
 }
 ```
 如果使用到了PPT、白板、涂鸦等功能可以可以使用我们为您提供的PPTFragment，需添加如下依赖，老师/助教可以管理课件内容，需要用到DocListVM
 ```groovy
-	compile 'com.baijia.live:liveplayer-sdk-core-ppt:0.3.10'
+	compile 'com.baijia.live:liveplayer-sdk-core-ppt:1.0.0'
 ```
 
 ## API说明
