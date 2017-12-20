@@ -1,3 +1,8 @@
+CHANGELOG core 1.2.4 & ppt-1.2.4
+==============
+- 添加ppt预加载逻辑
+- ChatVM Observable<Void> getObservableOfNotifyDataChange()改为Observable<List<IMessageModel>> getObservableOfNotifyDataChange()返回消息池中所有数据
+
 CHANGELOG core 1.2.2
 ==============
 - 兼容各端广播信令中的不同类型
