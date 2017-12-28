@@ -1,36 +1,3 @@
-<style>
-	table th {
-		border:0.5px solid #a8b6c3;
-	}
-	table td {
-		border:0.5px solid #a8b6c3;
-		padding: 0px 5px 0px 5px !important;
-		height: 30px !important;
-	}
-	h1 {
-		font-size: 30px;
-	}
-	h2 {
-		font-size: 27px;
-	}
-	h3 {
-		font-size: 22px !important;
-		font-weight: 500 !important;
-	}
-	h4 {
-		font-size: 19px;
-		font-weight: 500;
-	}
-	h5 {
-		font-size: 16px;
-		font-weight: 500;
-	}
-	h6 {
-		font-size: 13px;
-		font-weight: 500;
-	}
-</style>
-
 Android 直播 Core SDK
 ===============
 - **[github链接](https://github.com/baijia/BJLiveCore-Android)**
@@ -238,13 +205,13 @@ maven { url 'http://live-cdn.baijiayun.com/android-sdk/' }
 ###2.添加依赖
 ```groovy
 dependencies {
-	compile 'com.baijia.live:liveplayer-sdk-core:1.0.1'
+	compile 'com.baijia.live:liveplayer-sdk-core:1.2.6'
 }
 ```
 如果使用到了PPT、白板、涂鸦等功能可以可以使用我们为您提供的PPTFragment，需添加如下依赖
 
 ```groovy
-	compile 'com.baijia.live:liveplayer-sdk-core-ppt:1.0.0'
+	compile 'com.baijia.live:liveplayer-sdk-core-ppt:1.2.8'
 ```
 
 ## API说明
