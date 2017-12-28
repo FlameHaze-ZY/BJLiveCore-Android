@@ -106,6 +106,7 @@ public class JoinCodeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_joincode);
         initViews();
         enter(getIntent().getStringExtra(JOIN_CODE), getIntent().getStringExtra(USER_NAME));
+
     }
 
     @Override
@@ -185,7 +186,6 @@ public class JoinCodeActivity extends AppCompatActivity {
                                 }
                             }
                         }).show();
-
                     }
                 });
 
@@ -371,10 +371,13 @@ public class JoinCodeActivity extends AppCompatActivity {
                 .subscribe(new LPErrorPrintSubscriber<IAnnouncementModel>() {
                     @Override
                     public void call(IAnnouncementModel iAnnouncementModel) {
+                        String content = iAnnouncementModel.getContent();
+                        String url = iAnnouncementModel.getLink();
                         tvMessages.append(iAnnouncementModel.getContent() );
                         tvMessages.append("\n");
                     }
                 });
+
         // 主动请求公告
         liveRoom.requestAnnouncement();
 
@@ -422,7 +425,7 @@ public class JoinCodeActivity extends AppCompatActivity {
                     new AlertDialog.Builder(JoinCodeActivity.this).setTitle("菜单").setItems(new String[]{"举手"}, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            liveRoom.getSpeakQueueVM().requestSpeakApply();
+                            liveRoom.getSpeakQueueVM().requestSpeakApply(null);
                         }
                     }).show();
                     return;
@@ -499,7 +502,6 @@ public class JoinCodeActivity extends AppCompatActivity {
 //        ViERenderer
         textureView = ViETextureViewRenderer.CreateRenderer(JoinCodeActivity.this, true);
         playerLayout.addView(textureView);
-        player.setVideoView(textureView);
 
         playerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -529,7 +531,7 @@ public class JoinCodeActivity extends AppCompatActivity {
                                 }
                                 if (which < playerVideoModel.size()) {
                                     currentPlayingVideoUserId = playerVideoModel.get(which).getUser().getUserId();
-                                    player.playVideo(playerVideoModel.get(which).getUser().getUserId());
+                                    player.playVideo(playerVideoModel.get(which).getUser().getUserId(), textureView);
                                 }
                             }
                         }).show();
