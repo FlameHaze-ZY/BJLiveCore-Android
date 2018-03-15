@@ -1,8 +1,10 @@
 CHANGELOG core 1.3.3 & PPT 1.3.3
+==============
 - IMessageModel新增getTime方法获取消息的服务器时间
 - 修复动态PPT切换画笔个别情况没有刷新的问题
 
 CHANGELOG core 1.3.2 & PPT 1.3.2
+==============
 - 修复动态PPT缩放问题
 - 修复断网重连时偶现进度卡在50%的问题
 
