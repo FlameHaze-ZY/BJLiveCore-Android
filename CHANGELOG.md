@@ -1,3 +1,12 @@
+CHANGELOG core 1.3.5 & PPT 1.3.5
+==============
+- 升级底层SDK
+- 修复PPT画笔清除的问题
+
+CHANGELOG core 1.3.4 & PPT 1.3.4
+==============
+- 升级底层SDK
+
 CHANGELOG core 1.3.3 & PPT 1.3.3
 ==============
 - IMessageModel新增getTime方法获取消息的服务器时间
