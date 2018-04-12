@@ -25,8 +25,10 @@
 #百家云混淆规则
 -keep public class com.baijiahulian.**{*;}
 -keep public class com.bjhl.**{*;}
+-keep public class com.baijia.**{*;}
 -dontwarn com.baijiahulian.**
 -dontwarn com.bjhl.**
+-dontwarn com.baijia.**
 
 #ReactiveNetwork
 -keep public class com.github.pwittchen.reactivenetwork.**{*;}
