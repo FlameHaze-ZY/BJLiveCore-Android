@@ -1,3 +1,11 @@
+CHANGELOG PPT 1.4.5
+==============
+- 修复动态PPT不能禁用滑动的问题
+
+CHANGELOG PPT 1.4.3
+==============
+- 修复PPT IndexOutOfBoundsException
+
 CHANGELOG PPT 1.3.6
 ==============
 - 修复新上传动态PPT后不能往后翻页的问题
