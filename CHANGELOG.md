@@ -1,3 +1,18 @@
+CHANGELOG PPT 1.4.10
+==============
+- 增加AVSDK Log
+```java
+liveRoom.getLivePlayer().getLogFilePath() // 获取日志文件路径
+```
+- 增加小测结束回调
+```java
+liveRoom.getSurveyVM().getObservableOfSurveyClose().subscribe(new LPErrorPrintSubscriber<Void>() {
+                    @Override
+                    public void call(Void aVoid) {                      
+                    }
+                });
+```
+
 CHANGELOG PPT 1.4.5
 ==============
 - 修复动态PPT不能禁用滑动的问题
