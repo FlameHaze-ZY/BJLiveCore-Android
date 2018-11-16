@@ -1,4 +1,4 @@
-CHANGELOG PPT 1.4.10
+CHANGELOG 1.4.10
 ==============
 - 增加AVSDK Log
 ```java
