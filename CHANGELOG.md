@@ -1,3 +1,16 @@
+CHANGELOG 1.4.20
+==============
+- 增加音频输出设置接口
+注意：需要在进教室之前调用
+```java
+LiveSDK.setAudioOutput(LPConstants.VoiceType.VOICE_CALL);    //通话通道输出
+LiveSDK.setAudioOutput(LPConstants.VoiceType.VOICE_MEDIA);   //媒体通道输出
+```
+
+CHANGELOG 1.4.19
+==============
+- 修复音视频播放成功状态回调
+
 CHANGELOG 1.4.10
 ==============
 - 增加AVSDK Log
