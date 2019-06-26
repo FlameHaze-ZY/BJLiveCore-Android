@@ -1,3 +1,9 @@
+CHANGELOG 2.0.0-rc
+==============
+1.xSDK[升级方案](http://dev.baijiayun.com/default/wiki/detail/76)
+- 引入webrtc底层，对集成方透明
+- 支持问答、答题器、点赞等功能
+
 CHANGELOG 1.4.20
 ==============
 - 增加音频输出设置接口
