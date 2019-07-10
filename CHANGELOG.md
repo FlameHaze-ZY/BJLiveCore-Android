@@ -1,4 +1,4 @@
-CHANGELOG 2.0.0-rc
+CHANGELOG 2.0.0
 ==============
 1.xSDK[升级方案](http://dev.baijiayun.com/default/wiki/detail/76)
 - 引入webrtc底层，对集成方透明
