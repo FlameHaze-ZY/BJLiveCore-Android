@@ -1,3 +1,19 @@
+CHANGELOG 2.0.1
+==============
+- [答题器](http://dev.baijiayun.com/wiki/detail/77#h7-20)支持出题功能
+- [测验](http://dev.baijiayun.com/wiki/detail/77#h7-18)接口支持新版完整功能
+- AVSDK支持拉流设置AspectRatio，LPPlayer接口中
+```java
+/**
+ * 设置拉流的填充模式，注意需要在play之前调用
+ * 目前仅支持AVSDK
+ *
+ * @param aspectRatio Fit  居中展示，可能会有黑边
+ *                    Fill 铺满View，可能会裁减掉部分内容
+ */
+void setAspectRatio(LPConstants.LPAspectRatio aspectRatio);
+```
+
 CHANGELOG 2.0.0
 ==============
 1.xSDK[升级方案](http://dev.baijiayun.com/default/wiki/detail/76)
