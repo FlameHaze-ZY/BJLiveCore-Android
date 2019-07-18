@@ -1,3 +1,8 @@
+CHANGELOG 2.0.2
+==============
+- 设置AspectRatio改到了LPVideoView和LPCameraView中了。需要在play/setPreview之前设置。
+- 修复了测验的一些回调缺失的问题
+
 CHANGELOG 2.0.1
 ==============
 - [答题器](http://dev.baijiayun.com/wiki/detail/77#h7-20)支持出题功能
