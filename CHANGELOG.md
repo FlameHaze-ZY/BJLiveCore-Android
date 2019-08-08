@@ -1,3 +1,9 @@
+CHANGELOG 2.0.5
+==============
+- 修复了同时进入教室，相同user_number会出现互踢不起作用的问题
+- 修复了多白板的一些问题
+- 兼容iOS广播boolean值0/1的问题
+
 CHANGELOG 2.0.2
 ==============
 - 设置AspectRatio改到了LPVideoView和LPCameraView中了。需要在play/setPreview之前设置。
